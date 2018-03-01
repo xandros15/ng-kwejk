@@ -9,19 +9,26 @@ import {AppService} from './app.service';
 export class AppComponent implements OnInit {
     title = 'KWEJK';
     @Input() posts: any[];
+    current = 0;
 
     constructor(private service: AppService) {
     }
 
     ngOnInit(): void {
         this.service.get().subscribe(data => {
-            this.posts = data;
+            this.posts = data.posts;
+            this.current = data.current;
         });
     }
 
     next(): void {
-        this.service.getNext().subscribe(data => {
-            this.posts = data;
+        if (this.current > 0) {
+            this.current--;
+        }
+
+        this.service.get(this.current).subscribe(data => {
+            this.posts = data.posts;
+            this.current = data.current;
         });
     }
 }
